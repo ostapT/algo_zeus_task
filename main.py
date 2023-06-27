@@ -4,8 +4,10 @@ from datetime import datetime
 from binance.client import Client
 import csv
 
+from binance.exceptions import BinanceAPIException
 
-def collect_data(apikey, secret, symbol="BTCUSDT", interval="1h"):
+
+def collect_data(apikey, secret, symbol, interval):
     client = Client(apikey, secret)
     if interval == "1d":
         interval = Client.KLINE_INTERVAL_1DAY
@@ -14,7 +16,11 @@ def collect_data(apikey, secret, symbol="BTCUSDT", interval="1h"):
     elif interval == "4h":
         interval = Client.KLINE_INTERVAL_4HOUR
 
-    candles = client.get_klines(symbol=symbol, interval=interval)
+    try:
+        candles = client.get_klines(symbol=symbol, interval=interval)
+    except BinanceAPIException as e:
+        return f"API Error: {e.message}"
+
     fields = ["Open Time", "Open", "High", "Low", "Close", "Volume"]
 
     with open(f"{symbol}_{interval}_data.csv", "w", newline="") as file:

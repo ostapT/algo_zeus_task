@@ -16,13 +16,20 @@ def index():
     if request.method == "POST":
         interval = request.form["interval"]
         symbol = request.form["symbol"]
+        if symbol == "":
+            symbol = "BTCUSDT"
         api_key = os.getenv("API_KEY")
         api_secret = os.getenv("API_SECRET")
 
         collect_data(api_key, api_secret, symbol, interval)
 
         filename = f"{symbol}_{interval}_data.csv"
-        df = pd.read_csv(filename)
+        try:
+            df = pd.read_csv(filename)
+        except FileNotFoundError:
+            error_message = (f"File '{filename}' not found. "
+                             f"Please enter a valid symbol.")
+            return render_template("index.html", error_message=error_message)
 
         candlestick_df = go.Figure(
             data=[
