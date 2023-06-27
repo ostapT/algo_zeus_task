@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Candlestick Chart</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+</head>
+<body>
+    <h2>Enter interval and symbol:</h2>
+    <form action="/" method="POST">
+    <select name="interval">
+        <option value="1h">1 Hour</option>
+        <option value="1d">1 Day</option>
+        <option value="4h">4 Hours</option>
+    </select>
+    <input type="text" name="symbol" placeholder="Symbol">
+    <input type="submit" value="Submit">
+    </form>
+    <div id="candlestick_chart"></div>
+    <div id="piechart"></div>
+    <script>
+        var candlestickData = JSON.parse("{{ candlestick_data | safe }}");
+        candlestickData.layout.title = "Candlestick Chart for {{ symbol }} ({{ interval }})";
+        Plotly.newPlot("candlestick_chart", candlestickData.data, candlestickData.layout);
+
+        var piechartData = JSON.parse('{{ piechart_data | safe }}');
+        piechartData.layout.title = "Pie Chart - Market Caps";
+        piechartData.layout.legend = { "title": "Market Caps", "orientation": "v", "x": 0.99, "y": 1.1, xanchor: "right", yanchor: "top" };
+        Plotly.newPlot("piechart", piechartData.data, piechartData.layout);
+    </script>
+</body>
+</html>
