@@ -43,8 +43,10 @@ Choose the interval (1h, 1d, or 4h) and enter the symbol of the cryptocurrency y
 Click the "Submit" button to display the candlestick chart and market cap pie chart.
 
 ## Candlestick chart:
+Available on http://localhost:5000
 ![Candlestick.png](static%2FCandlestick.png)
 ## Market caps pie chart:
+Available on http://localhost:5000/piechart
 ![PieChart.png](static%2FPieChart.png)
 
 # Database Implementation
