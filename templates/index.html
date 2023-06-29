@@ -25,11 +25,6 @@
         var candlestick_data = JSON.parse('{{ candlestick_data | safe }}');
         candlestick_data.layout.title = 'Candlestick Chart for {{ symbol }} ({{ interval }})';
         Plotly.newPlot('candlestick_chart', candlestick_data.data, candlestick_data.layout);
-
-        var piechart_data = JSON.parse('{{ piechart_data | safe }}');
-        piechart_data.layout.title = "Pie Chart - Market Caps";
-        piechart_data.layout.legend = { "title": "Market Caps", "orientation": "v", "x": 0.99, "y": 1.1, xanchor: "right", yanchor: "top" };
-        Plotly.newPlot('piechart', piechart_data.data, piechart_data.layout);
     </script>
 </body>
 </html>

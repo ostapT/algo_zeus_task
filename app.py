@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
-import os
 from dotenv import load_dotenv
 from main import collect_data, get_market_caps
 
@@ -16,12 +15,10 @@ def index():
     if request.method == "POST":
         interval = request.form["interval"]
         symbol = request.form["symbol"]
-        if symbol == "":
+        if not symbol:
             symbol = "BTCUSDT"
-        api_key = os.getenv("API_KEY")
-        api_secret = os.getenv("API_SECRET")
 
-        collect_data(api_key, api_secret, symbol, interval)
+        collect_data(symbol, interval)
 
         filename = f"{symbol}_{interval}_data.csv"
         try:
@@ -49,23 +46,9 @@ def index():
         )
         candlestick_json = candlestick_df.to_json()
 
-        market_caps = get_market_caps()
-        df_market_caps = pd.DataFrame(
-            list(market_caps.items()),
-            columns=["Symbol", "Market Cap"]
-        )
-        piechart_data = px.pie(
-            df_market_caps,
-            values="Market Cap",
-            names="Symbol",
-            title="Market Caps"
-        )
-        piechart_json = piechart_data.to_json()
-
         return render_template(
             "index.html",
             candlestick_data=candlestick_json,
-            piechart_data=piechart_json,
             symbol=symbol,
             interval=interval
         )
@@ -73,5 +56,26 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/piechart", methods=["GET", "POST"])
+def piechart():
+    market_caps = get_market_caps()
+    df_market_caps = pd.DataFrame(
+        list(market_caps.items()),
+        columns=["Symbol", "Market Cap"]
+    )
+    piechart_data = px.pie(
+        df_market_caps,
+        values="Market Cap",
+        names="Symbol",
+        title="Market Caps"
+    )
+    piechart_json = piechart_data.to_json()
+
+    return render_template(
+        "piechart.html",
+        piechart_data=piechart_json
+    )
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

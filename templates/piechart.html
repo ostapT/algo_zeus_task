@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pie Chart</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="piechart"></div>
+
+    <script>
+      var piechart_data = JSON.parse('{{ piechart_data | safe }}');
+        piechart_data.layout.title = "Pie Chart - Market Caps";
+        piechart_data.layout.legend = { "title": "Market Caps", "orientation": "v", "x": 0.99, "y": 1.1, xanchor: "right", yanchor: "top" };
+        Plotly.newPlot('piechart', piechart_data.data, piechart_data.layout);
+    </script>
+</body>
+</html>
